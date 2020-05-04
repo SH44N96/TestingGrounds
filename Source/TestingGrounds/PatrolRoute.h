@@ -7,7 +7,7 @@
 #include "PatrolRoute.generated.h"
 
 /**
- * A "Route Card" to help AI choose their next waypoint
+ * A "Route Card" to help AI choose their next waypoint.
  */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TESTINGGROUNDS_API UPatrolRoute : public UActorComponent
