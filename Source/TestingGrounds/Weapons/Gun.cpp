@@ -30,13 +30,6 @@ void AGun::Tick(float DeltaTime)
 
 }
 
-// Called when the game starts or when spawned
-void AGun::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
 void AGun::OnFire()
 {
 	// try and fire a projectile
@@ -83,4 +76,11 @@ void AGun::OnFire()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+}
+
+// Called when the game starts or when spawned
+void AGun::BeginPlay()
+{
+	Super::BeginPlay();
+	
 }
