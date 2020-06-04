@@ -15,7 +15,7 @@ public:
 	// Sets default values for this actor's properties
 	ATile();
 
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn = 1, int MaxSpawn = 1, float Radius = 500, float MinScale = 1, float MaxScale = 1);
 
 protected:
@@ -27,7 +27,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-
 	bool FindEmptyLocation(FVector& OutLocation, float Radius);
 
 	void PlaceActor(TSubclassOf<AActor> ToSpawn, FVector SpawnPoint, float Rotation, float Scale);
