@@ -25,6 +25,29 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn,
 	}
 }
 
+void ATile::PlaceAIPawns(TSubclassOf<APawn> ToSpawn, int MinSpawn, int MaxSpawn, float Radius)
+{
+	TArray<FSpawnPosition> SpawnPositions = RandomSpawnPositions(MinSpawn, MaxSpawn, Radius, 1, 1);
+	for(FSpawnPosition SpawnPosition : SpawnPositions)
+	{
+		PlaceAIPawn(ToSpawn, SpawnPosition);
+	}
+}
+
+// Called every frame
+void ATile::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+void ATile::SetPool(UActorPool* InPool)
+{
+	UE_LOG(LogTemp, Warning, TEXT("[%s] Setting Pool %s"), *(this->GetName()), *(InPool->GetName()));
+	Pool = InPool;
+
+	PositionNavMeshBoundsVolume();
+}
+
 // Called when the game starts or when spawned
 void ATile::BeginPlay()
 {
@@ -49,20 +72,6 @@ void ATile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Pool->Return(NavMeshBoundsVolume);
 
 	Super::EndPlay(EndPlayReason);
-}
-
-// Called every frame
-void ATile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
-void ATile::SetPool(UActorPool* InPool)
-{
-	UE_LOG(LogTemp, Warning, TEXT("[%s] Setting Pool %s"), *(this->GetName()), *(InPool->GetName()));
-	Pool = InPool;
-
-	PositionNavMeshBoundsVolume();
 }
 
 void ATile::PositionNavMeshBoundsVolume()
@@ -122,6 +131,16 @@ void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, const FSpawnPosition& SpawnP
 	Spawned->SetActorRotation(FRotator(0, SpawnPosition.Rotation, 0));
 	Spawned->SetActorScale3D(FVector(SpawnPosition.Scale));
 	SpawnedActors.Add(Spawned);
+}
+
+void ATile::PlaceAIPawn(TSubclassOf<APawn> ToSpawn, const FSpawnPosition& SpawnPosition)
+{
+	APawn* Spawned = GetWorld()->SpawnActor<APawn>(ToSpawn);
+	Spawned->SetActorRelativeLocation(SpawnPosition.Location);
+	Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+	Spawned->SetActorRotation(FRotator(0, SpawnPosition.Rotation, 0));
+	Spawned->SpawnDefaultController();
+	Spawned->Tags.Add(FName("Enemy"));
 }
 
 bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
