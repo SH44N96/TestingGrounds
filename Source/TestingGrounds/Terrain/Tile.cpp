@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "../ActorPool.h"
 #include "DrawDebugHelpers.h"
 #include "Tile.h"
 
@@ -36,6 +37,12 @@ void ATile::BeginPlay()
 void ATile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ATile::SetPool(UActorPool* InPool)
+{
+	UE_LOG(LogTemp, Warning, TEXT("[%s] Setting Pool %s"), *(this->GetName()), *(InPool->GetName()));
+	Pool = InPool;
 }
 
 bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius)
