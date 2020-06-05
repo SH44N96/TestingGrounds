@@ -33,6 +33,26 @@ void ATile::BeginPlay()
 	Super::BeginPlay();
 }
 
+void ATile::Destroyed()
+{
+	Super::Destroyed();
+
+	for(AActor* Actor : SpawnedActors)
+	{
+		if(Actor)
+		{
+			Actor->Destroy();
+		}
+	}
+}
+
+void ATile::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Pool->Return(NavMeshBoundsVolume);
+
+	Super::EndPlay(EndPlayReason);
+}
+
 // Called every frame
 void ATile::Tick(float DeltaTime)
 {
@@ -43,6 +63,19 @@ void ATile::SetPool(UActorPool* InPool)
 {
 	UE_LOG(LogTemp, Warning, TEXT("[%s] Setting Pool %s"), *(this->GetName()), *(InPool->GetName()));
 	Pool = InPool;
+
+	PositionNavMeshBoundsVolume();
+}
+
+void ATile::PositionNavMeshBoundsVolume()
+{
+	NavMeshBoundsVolume = Pool->Checkout();
+	if(NavMeshBoundsVolume == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Not enough actors in pool."));
+		return;
+	}
+	NavMeshBoundsVolume->SetActorLocation(GetActorLocation());
 }
 
 bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius)
@@ -70,6 +103,7 @@ void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, FVector SpawnPoint, float Ro
 	Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 	Spawned->SetActorRotation(FRotator(0, Rotation, 0));
 	Spawned->SetActorScale3D(FVector(Scale));
+	SpawnedActors.Add(Spawned);
 }
 
 bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
