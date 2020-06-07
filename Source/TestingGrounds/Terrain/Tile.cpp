@@ -103,7 +103,7 @@ void ATile::PositionNavMeshBoundsVolume()
 bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius)
 {
 	FBox Bounds(MinExtent, MaxExtent);
-	const int MAX_ATTEMPTS = 100;
+	const int MAX_ATTEMPTS = 1000;
 	for(size_t i = 0; i < MAX_ATTEMPTS; i++)
 	{
 		FVector CandidatePoint = FMath::RandPointInBox(Bounds);
