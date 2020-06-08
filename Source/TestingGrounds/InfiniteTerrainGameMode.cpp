@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "InfiniteTerrainGameMode.h"
 #include "ActorPool.h"
 #include "EngineUtils.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
-#include "InfiniteTerrainGameMode.h"
 
 AInfiniteTerrainGameMode::AInfiniteTerrainGameMode()
 {
@@ -18,6 +18,16 @@ void AInfiniteTerrainGameMode::PopulateBoundsVolumePool()
 		AddToPool(*VolumeIterator);
 		++VolumeIterator;
 	}
+}
+
+int AInfiniteTerrainGameMode::GetScore()
+{
+	return Score;
+}
+
+void AInfiniteTerrainGameMode::IncrementScore()
+{
+	Score++;
 }
 
 void AInfiniteTerrainGameMode::AddToPool(ANavMeshBoundsVolume* VolumeToAdd)
